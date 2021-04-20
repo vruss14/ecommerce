@@ -3,84 +3,89 @@ const { Tag, Product, ProductTag } = require('../../models');
 
 // The `/api/tags` endpoint
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   // find all tags
   // be sure to include its associated Product data
-  Tag.findAll({
-    include: [{
-      model: Product,
-      required: true
-    }]
-  }).then(tags => {
-    res.json(tags);
-  })
+
+  try {
+    const tagData = await Tag.findAll({
+      include: [{ model: Product, required: false }]
+    })
+
+    if (!tagData) {
+      res.status(404).json({ message: 'No tags found.' });
+      return;
+    }
+
+    res.status(200).json(tagData);
+    console.log('\n', "The tags were successfully retrieved!", '\n')
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   // find a single tag by its `id`
   // be sure to include its associated Product data
 
-  Tag.findByPk(req.params.id, {
-    include: [{
-      model: Product,
-      required: true
-    }]
-  }).then((tagData) => {
-    res.json(tagData);
-  });
+  try {
+    const singleTagData = await Tag.findByPk(req.params.id, {
+      include: [{ model: Product, required: false }]
+    })
+
+    if (!singleTagData) {
+      res.status(404).json({ message: 'No tags found with that id!' })
+    }
+
+    res.status(200).json(singleTagData);
+    console.log('\n', "The tag was successfully retrieved!", '\n')
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   // create a new tag
 
-  Tag.create(req.body)
-  .then((newTag) => {
-    res.json(newTag);
-  })
-  .catch((err) => {
-    res.json(err);
-  });
+  try {
+    const newTag = await Tag.create(req.body);
+
+    res.status(200).json(newTag);
+    console.log('\n', "The tag was successfully created!", '\n');
+
+  } catch (err) {
+    res.status(500).json(err);
+  }
 
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
   // update a tag's name by its `id` value
 
-  Tag.update(
-    {
-      // All the fields you can update and the data attached to the request body.
-      tag_name: req.body.tag_name,
-    },
-    {
-      // Gets a book based on the book_id given in the request parameters
-      where: {
-        id: req.params.id,
-      },
-    }
-  )
-    .then((updatedTag) => {
-      res.json(updatedTag);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.json(err);
-    });
+  try {
+    const updatedTag = await Tag.update(
+      { tag_name: req.body.tag_name, }, 
+      { where: { id: req.params.id, } });
 
+    res.status(200).json(updatedTag);
+    console.log('\n', "The tag was successfully updated!", '\n')
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   // delete on tag by its `id` value
 
-  Tag.destroy({
-    where: {
-      id: req.params.id,
-    },
-  })
-  .then((deletedTag) => {
-    res.json(deletedTag);
-  })
-  .catch((err) => res.json(err));
+  try {
+    const deletedTag = await Tag.destroy(
+      { where: { id: req.params.id, } });
 
+    res.status(200).json(deletedTag);
+    console.log('\n', "The tag was successfully deleted!", '\n')
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 module.exports = router;
