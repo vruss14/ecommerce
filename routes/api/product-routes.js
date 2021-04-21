@@ -84,6 +84,19 @@ router.post('/', (req, res) => {
 router.put('/:id', (req, res) => {
   // update product data
 
+  // This is an example request that works. The tagsId field is essential.
+
+  // {
+  //   "id": 1,
+  //   "product_name": "Plain T-Shirt",
+  //   "price": 15,
+  //   "stock": 14,
+  //   "category_id": 1,
+  //   "product_id": null,
+  //   "tagIds": [7, 8, 3]
+    
+  // }
+
   Product.update(req.body,
     {
       // Gets a book based on the book_id given in the request parameters
@@ -119,12 +132,14 @@ router.put('/:id', (req, res) => {
         ProductTag.bulkCreate(newProductTags),
       ]);
     })
-    .then((updatedProductTags) => res.status(200).json(updatedProductTags))
 
     .catch((err) => {
       console.log(err);
       res.status(400).json(err);
-    });
+    })
+
+    .then((updatedProductTags) => res.status(200).json({ message: 'The product has been updated!' }))
+
 });
 
 router.delete('/:id', async (req, res) => {
