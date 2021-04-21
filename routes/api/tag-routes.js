@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
     }
 
     res.status(200).json(tagData);
-    console.log('\n', "The tags were successfully retrieved!", '\n')
+    console.log('\n', "All tags have been successfully retrieved!", '\n')
   } catch (err) {
     res.status(500).json(err);
   }
@@ -50,7 +50,7 @@ router.post('/', async (req, res) => {
   try {
     const newTag = await Tag.create(req.body);
 
-    res.status(200).json(newTag);
+    res.status(200).json([{ message: 'The tag was successfully created!' }, newTag]);
     console.log('\n', "The tag was successfully created!", '\n');
 
   } catch (err) {
@@ -67,7 +67,7 @@ router.put('/:id', async (req, res) => {
       { tag_name: req.body.tag_name, }, 
       { where: { id: req.params.id, } });
 
-    res.status(200).json(updatedTag);
+    res.status(200).json({ message: 'The tag has been updated.' });
     console.log('\n', "The tag was successfully updated!", '\n')
   } catch (err) {
     res.status(500).json(err);
@@ -81,7 +81,7 @@ router.delete('/:id', async (req, res) => {
     const deletedTag = await Tag.destroy(
       { where: { id: req.params.id, } });
 
-    res.status(200).json(deletedTag);
+    res.status(200).json({ message: 'The tag was successfully deleted!' });
     console.log('\n', "The tag was successfully deleted!", '\n')
   } catch (err) {
     res.status(500).json(err);

@@ -3,85 +3,90 @@ const { Category, Product } = require('../../models');
 
 // The `/api/categories` endpoint
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   // find all categories
-  // be sure to include its associated Products
+  // be sure to include its associated Product data
 
-  Category.findAll({
-    include: [{
-      model: Product,
-      required: false
-    }]
-  }).then(categories => {
-    res.json(categories);
-  })
+  try {
+    const categoryData = await Category.findAll({
+      include: [{ model: Product, required: false }]
+    })
+
+    if (!categoryData) {
+      res.status(404).json({ message: 'No categories found.' });
+      return;
+    }
+
+    res.status(200).json(categoryData);
+    console.log('\n', "All categories have been successfully retrieved!", '\n')
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
-router.get('/:id', (req, res) => {
-  // find one category by its `id` value
-  // be sure to include its associated Products
+router.get('/:id', async (req, res) => {
+  // find a single category by its `id`
+  // be sure to include its associated Product data
 
-  Category.findByPk(req.params.id, {
-    include: [{
-      model: Product,
-      required: true
-    }]
-  }).then((categoryData) => {
-    res.json(categoryData);
-  });
+  try {
+    const singleCategoryData = await Category.findByPk(req.params.id, {
+      include: [{ model: Product, required: false }]
+    })
+
+    if (!singleCategoryData) {
+      res.status(404).json({ message: 'No categories found with that id!' })
+    }
+
+    res.status(200).json(singleCategoryData);
+    console.log('\n', "The category was successfully retrieved!", '\n')
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   // create a new category
 
-  Category.create(req.body)
-  .then((newCategory) => {
-    res.json(newCategory);
-  })
-  .catch((err) => {
-    res.json(err);
-  });
+  try {
+    const newCategory = await Category.create(req.body);
+
+    res.status(200).json([{ message: 'The category was successfully created!' }, newCategory]);
+    console.log('\n', "The tag was successfully created!", '\n');
+
+  } catch (err) {
+    res.status(500).json(err);
+  }
 
 });
 
-router.put('/:id', (req, res) => {
-  // update a category by its `id` value
+router.put('/:id', async (req, res) => {
+  // update a tag's name by its `id` value
 
-  Category.update(
-    {
-      // All the fields you can update and the data attached to the request body.
-      category_name: req.body.category_name,
-    },
-    {
-      // Gets a book based on the book_id given in the request parameters
-      where: {
-        id: req.params.id,
-      },
-    }
-  )
-    .then((updatedCategory) => {
-      res.json(updatedCategory);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.json(err);
-    });
+  try {
+    const updatedCategory = await Category.update(
+      { category_name: req.body.category_name, }, 
+      { where: { id: req.params.id, } });
+
+    res.status(200).json({ message: 'The category has been updated.' });
+    console.log('\n', "The category was successfully updated!", '\n')
+  } catch (err) {
+    res.status(500).json(err);
+  }
 
 });
 
-router.delete('/:id', (req, res) => {
-  // delete a category by its `id` value
+router.delete('/:id', async (req, res) => {
+  // delete on category by its `id` value
 
-  Category.destroy({
-    where: {
-      id: req.params.id,
-    },
-  })
-  .then((deletedCategory) => {
-    res.json(deletedCategory);
-  })
-  .catch((err) => res.json(err));
+  try {
+    const deletedCategory = await Category.destroy(
+      { where: { id: req.params.id, } });
 
+    res.status(200).json({ message: 'The category was successfully deleted!' });
+    console.log('\n', "The category was successfully deleted!", '\n')
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 module.exports = router;
