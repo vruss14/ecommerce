@@ -72,7 +72,7 @@ router.post('/', (req, res) => {
       // if no product tags, just respond
       res.status(200).json([{ message: 'The product has been created!' }, product]);
     })
-    .then((productTagIds) => res.status(200).json(productTagIds))
+    .then((productTagIds) => res.status(200).json([{ message: 'The product has been created!' }, productTagIds]))
     .catch((err) => {
       console.log(err);
       res.status(400).json(err);
@@ -85,13 +85,13 @@ router.put('/:id', (req, res) => {
 
   // This is an example request that works. The tagsId field is essential.
 
-  // {
-  //   "id": 1,
-  //   "product_name": "Plain T-Shirt",
-  //   "price": 15,
-  //   "stock": 14,
-  //   "tagIds": [7, 8, 3]
-  // }
+  /* {
+    "id": 1,
+    "product_name": "Plain T-Shirt",
+    "price": 15,
+    "stock": 14,
+    "tagIds": [7, 8, 3]
+  } */
 
   Product.update(req.body, { where: { id: req.params.id, }, })
     .then((product) => {

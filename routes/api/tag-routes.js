@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
 
   try {
     const tagData = await Tag.findAll({
-      include: [{ model: Product, required: false }]
+      include: [{ model: Product, required: false, through: ProductTag }]
     })
 
     if (!tagData) {
