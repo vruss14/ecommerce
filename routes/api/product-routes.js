@@ -1,13 +1,12 @@
 const router = require('express').Router();
 const { Product, Category, Tag, ProductTag } = require('../../models');
-const { restore } = require('../../models/Product');
 
 // The `/api/products` endpoint
 
-// get all products
+// Gets all the products through the .findAll method
 router.get('/', async (req, res) => {
-  // find all products
-  // be sure to include its associated Category and tag data
+  // When products are retrieved, their associated Category and Tag data is also included
+  // required: false means that even if there isn't Category and/or Tag data, the product is included in the GET request
 
   try {
     const productData = await Product.findAll({
@@ -27,8 +26,8 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:id', async (req, res) => {
-  // find a single product by its `id`
-  // be sure to include its associated Category and Tag data
+  // Finds a single product using the .findByPk (primary key) method
+  // Includes Category and Tag Data (if applicable)
 
   try {
     const singleProductData = await Product.findByPk(req.params.id, {
@@ -46,7 +45,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// create new product
+// Creates a new product through a POST request
 router.post('/', (req, res) => {
 
   /* req.body should look like this...
@@ -60,7 +59,7 @@ router.post('/', (req, res) => {
 
   Product.create(req.body)
     .then((product) => {
-      // if there's product tags, we need to create pairings to bulk create in the ProductTag model
+      // If there are product tags, we need to create pairings to bulk create in the ProductTag model
       if (req.body.tagIds) {
         const productTagIdArr = req.body.tagIds.map((tag_id) => {
           return {
@@ -80,9 +79,9 @@ router.post('/', (req, res) => {
     });
 });
 
-// update product
+// Updates a product by ID through a PUT request
 router.put('/:id', (req, res) => {
-  // update product data
+  // Updates product data
 
   // This is an example request that works. The tagsId field is essential.
 
@@ -91,28 +90,18 @@ router.put('/:id', (req, res) => {
   //   "product_name": "Plain T-Shirt",
   //   "price": 15,
   //   "stock": 14,
-  //   "category_id": 1,
-  //   "product_id": null,
   //   "tagIds": [7, 8, 3]
-    
   // }
 
-  Product.update(req.body,
-    {
-      // Gets a book based on the book_id given in the request parameters
-      where: {
-        id: req.params.id,
-      },
-    }
-  )
+  Product.update(req.body, { where: { id: req.params.id, }, })
     .then((product) => {
-      // find all associated tags from ProductTag
+      // Finds all associated tags from ProductTag
       return ProductTag.findAll({ where: { product_id: req.params.id } });
     })
     .then((productTags) => {
-      // get list of current tag_ids
+      // Gets a list of current tag_ids
       const productTagIds = productTags.map(({ tag_id }) => tag_id);
-      // create filtered list of new tag_ids
+      // Creates a filtered list of new tag_ids
       const newProductTags = req.body.tagIds
         .filter((tag_id) => !productTagIds.includes(tag_id))
         .map((tag_id) => {
@@ -121,12 +110,12 @@ router.put('/:id', (req, res) => {
             tag_id,
           };
         });
-      // figure out which ones to remove
+      // Determines which tags to remove if needed
       const productTagsToRemove = productTags
         .filter(({ tag_id }) => !req.body.tagIds.includes(tag_id))
         .map(({ id }) => id);
 
-      // run both actions
+      // Runs both actions
       return Promise.all([
         ProductTag.destroy({ where: { id: productTagsToRemove } }),
         ProductTag.bulkCreate(newProductTags),
@@ -143,7 +132,7 @@ router.put('/:id', (req, res) => {
 });
 
 router.delete('/:id', async (req, res) => {
-  // delete a product by its `id` value
+  // Deletes a product by ID
 
   try {
     const deletedProduct = await Product.destroy(
