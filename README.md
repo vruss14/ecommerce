@@ -39,7 +39,7 @@ You will need to create the database in your own MySQL Workbench to ensure that 
 
 To start the application from the command line after all installations have been complete, run the command ```npm run seed``` to seed data to the database you created, then run ```npm start```. You can then use a tool such as Insomnia to test all routes.
 
-View a video demo of this application at: https://drive.google.com/file/d/1Gv2NFOYGSuKUBrIJ0UuhkLkpL9sPk2L1/view
+View a video demo of this application at: https://drive.google.com/file/d/1dPxroQXfoLFel8Fmy0oM83rVjG9GtnQc/view
             
 ## Usage
 
