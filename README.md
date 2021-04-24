@@ -40,8 +40,14 @@ You will need to create the database in your own MySQL Workbench to ensure that 
 To start the application from the command line after all installations have been complete, run the command ```npm run seed``` to seed data to the database you created, then run ```npm start```. You can then use a tool such as Insomnia to test all routes.
 
 View a video demo of this application at: https://drive.google.com/file/d/1dPxroQXfoLFel8Fmy0oM83rVjG9GtnQc/view
+
+A screenshot of the application being tested in Insomnia:
+
+![screenshot](assets/ecommerce-screenshot.png)
             
 ## Usage
+
+This application is not yet connected to a front-end application, and is not currently deployed to Heroku.
 
 ## License
 
@@ -52,6 +58,8 @@ This project has not yet been licensed, and thus, standard copyright laws apply.
 Valerie Russell is the sole contributor to this project. Starter code was provided by the MSU Coding Bootcamp/Trilogy Education Services.
             
 ## Tests
+
+There are currently no tests written for this project.
             
 ## Questions
 
