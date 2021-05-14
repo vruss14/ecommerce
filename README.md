@@ -1,5 +1,7 @@
 # E-Commerce Site
 
+A functioning back-end for an ecommerce site. Users can create, read, update, and delete product information as needed.
+
 ## Description
 
 This application utilizes back-end technologies such as Node.js, Express.js, and Sequelize to create a functional back-end for a simple E-Commerce website. The application allows a user to successfully make POST, GET, PUT, and DELETE requests to products, categories, and tags for the store. This means that a user can add and delete products/categories/tags on their site, and they can update existing information. If desired, a user can also display all products/categories/tags, or search specifically by ID.
@@ -11,6 +13,15 @@ A few ideas for future development include:
 - Building the front-end for this application and connecting it to the back-end of the site
 - Deploying the application on Heroku
 - Creating search functionality that utilizes particular keywords
+
+## Technologies Used
+
+- Node.js
+- Express.js
+- MySQL
+- Sequelize
+- Insomnia Core
+- Dotenv
 
 ## Table of Contents
 
